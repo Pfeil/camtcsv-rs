@@ -5,25 +5,35 @@ use money::Money;
 use parser::{parse_date, parse_money};
 
 #[derive(Debug, Deserialize)]
-enum TransactionType {
+pub enum TransactionType {
     ABSCHLUSS,
     UMBUCHUNG,
+    UEBERTRAG,
     GUTSCHRIFT,
     DAUERAUFTRAG,
     KARTENZAHLUNG,
     FOLGELASTSCHRIFT,
+    #[serde(rename = "ONLINE-UEBERWEISUNG")]
+    ONLINE,
+    BARGELDAUSZAHLUNG,
+    #[serde(rename = "EINMAL LASTSCHRIFT")]
+    EINMALLASTSCHRIFT,
+    #[serde(rename = "SEPA-ELV-LASTSCHRIFT")]
+    SepaElvLastschrift,
+    #[serde(rename = "ECHTZEIT-UEBERWEISUNG")]
+    EchtzeitUeberweisung,
 }
 
 #[derive(Debug)]
 pub struct Transaction {
-    owner_account: Account,
-    partner_account: Account,
-    creation_date: NaiveDate,
-    validation_date: NaiveDate,
-    transaction_type: TransactionType,
-    description: String,
-    money: Money, // TODO Need proper integer class for money
-    info: String,
+    pub owner_account: Account,
+    pub partner_account: Account,
+    pub creation_date: NaiveDate,
+    pub validation_date: NaiveDate,
+    pub transaction_type: TransactionType,
+    pub description: String,
+    pub money: Money, // TODO Need proper integer class for money
+    pub info: String,
 }
 
 impl From<RawTransaction> for Transaction {
