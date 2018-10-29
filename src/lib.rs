@@ -1,6 +1,5 @@
 extern crate chrono;
 extern crate csv;
-#[macro_use]
 extern crate serde_derive;
 
 mod account;

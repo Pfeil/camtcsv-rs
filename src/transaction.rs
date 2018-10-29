@@ -3,6 +3,8 @@ use chrono::naive::NaiveDate;
 use account::Account;
 use money::Money;
 use parser::{parse_date, parse_money};
+// Use serdes serialize and deserialize derive macros. Requires Rust 1.30 or higher.
+use serde_derive::*;
 
 #[derive(Debug, Deserialize)]
 pub enum TransactionType {
