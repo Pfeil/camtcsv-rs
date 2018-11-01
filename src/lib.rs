@@ -1,9 +1,8 @@
 extern crate chrono;
+extern crate claude;
 extern crate csv;
 extern crate serde_derive;
 
-mod account;
-mod money;
 mod parser;
 mod transaction;
 
@@ -11,6 +10,7 @@ use std::io::Read;
 use std::path::Path;
 use transaction::RawTransaction;
 
+pub mod account;
 pub use transaction::Transaction;
 
 #[allow(dead_code)]

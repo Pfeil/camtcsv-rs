@@ -1,9 +1,9 @@
 use chrono::naive::NaiveDate;
 
 use account::Account;
-use money::Money;
-use parser::{parse_date, parse_money};
+use parser::{parse_date, parse_currency};
 // Use serdes serialize and deserialize derive macros. Requires Rust 1.30 or higher.
+use crate::claude::Currency;
 use serde_derive::*;
 
 #[derive(Debug, Deserialize)]
@@ -34,7 +34,7 @@ pub struct Transaction {
     pub validation_date: NaiveDate,
     pub transaction_type: TransactionType,
     pub description: String,
-    pub money: Money, // TODO Need proper integer class for money
+    pub money: Currency,
     pub info: String,
 }
 
@@ -57,7 +57,7 @@ impl From<RawTransaction> for Transaction {
             validation_date: parse_date(&raw.validation_date),
             transaction_type: raw.transaction_type,
             description: raw.description,
-            money: parse_money(&raw.currency, &raw.money),
+            money: parse_currency(raw.money, raw.currency),
             info: raw.info,
         }
     }

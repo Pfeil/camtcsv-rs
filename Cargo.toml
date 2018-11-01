@@ -5,6 +5,7 @@ authors = ["Andreas Pfeil <der.anderas.pfeil@googlemail.com>"]
 
 [dependencies]
 chrono = { version = "0.4", features = ["serde"] }
+claude = { version = "0.3.0", features = ["parsing", "serialization"]}
 csv = "1"
 serde = "1"
 serde_derive = "1"
