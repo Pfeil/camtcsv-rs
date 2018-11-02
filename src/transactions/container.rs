@@ -1,7 +1,7 @@
 use chrono::naive::NaiveDate;
 
 use account::Account;
-use parser::{EuroDateFormat, SymbolFromIsoCode};
+use util::{EuroDateFormat, SymbolFromIsoCode, CompressWhitespace};
 // Use serdes serialize and deserialize derive macros. Requires Rust 1.30 or higher.
 use serde_derive::*;
 
@@ -44,14 +44,14 @@ pub struct Transaction {
 impl From<RawTransaction> for Transaction {
     fn from(raw: RawTransaction) -> Self {
         let owner_account = Account {
-            name: "Myself".to_owned(),
-            iban: raw.owner_account,
-            bank: "Sparkasse".to_owned(),
+            name: "Myself".to_owned().compress_whitespace(),
+            iban: raw.owner_account.compress_whitespace(),
+            bank: "Sparkasse".to_owned().compress_whitespace(),
         };
         let partner_account = Account {
-            name: raw.partner,
-            iban: raw.partner_account,
-            bank: raw.partner_bank,
+            name: raw.partner.compress_whitespace(),
+            iban: raw.partner_account.compress_whitespace(),
+            bank: raw.partner_bank.compress_whitespace(),
         };
         Transaction {
             owner_account,
@@ -59,9 +59,9 @@ impl From<RawTransaction> for Transaction {
             creation_date: NaiveDate::from_eu_date_str(&raw.creation_date),
             validation_date: NaiveDate::from_eu_date_str(&raw.validation_date),
             transaction_type: raw.transaction_type,
-            description: raw.description, // TODO trim strings (also within the string, multiple whitespaces etc.)
+            description: raw.description.compress_whitespace(),
             money: Currency::from_str_and_code(raw.money, raw.currency),
-            info: raw.info,
+            info: raw.info.compress_whitespace(),
         }
     }
 }

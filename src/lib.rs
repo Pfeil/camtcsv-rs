@@ -4,7 +4,7 @@ extern crate csv;
 extern crate serde_derive;
 extern crate serde;
 
-mod parser;
+mod util;
 
 pub mod account;
 pub mod transactions;
