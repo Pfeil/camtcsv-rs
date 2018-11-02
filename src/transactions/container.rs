@@ -1,10 +1,11 @@
 use chrono::naive::NaiveDate;
 
 use account::Account;
-use parser::{parse_date, parse_currency};
+use parser::{EuroDateFormat, SymbolFromIsoCode};
 // Use serdes serialize and deserialize derive macros. Requires Rust 1.30 or higher.
-use crate::claude::Currency;
 use serde_derive::*;
+
+pub use crate::claude::Currency;
 
 #[derive(Debug, Deserialize)]
 pub enum TransactionType {
@@ -25,6 +26,8 @@ pub enum TransactionType {
     #[serde(rename = "ECHTZEIT-UEBERWEISUNG")]
     EchtzeitUeberweisung,
 }
+
+// TODO directly serialize Transaction from CSV by using a deserialize method and stuff.
 
 #[derive(Debug)]
 pub struct Transaction {
@@ -53,11 +56,11 @@ impl From<RawTransaction> for Transaction {
         Transaction {
             owner_account,
             partner_account,
-            creation_date: parse_date(&raw.creation_date),
-            validation_date: parse_date(&raw.validation_date),
+            creation_date: NaiveDate::from_eu_date_str(&raw.creation_date),
+            validation_date: NaiveDate::from_eu_date_str(&raw.validation_date),
             transaction_type: raw.transaction_type,
-            description: raw.description,
-            money: parse_currency(raw.money, raw.currency),
+            description: raw.description, // TODO trim strings (also within the string, multiple whitespaces etc.)
+            money: Currency::from_str_and_code(raw.money, raw.currency),
             info: raw.info,
         }
     }
